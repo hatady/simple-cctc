@@ -1,0 +1,29 @@
+common:
+  dt: 0.1
+  v_max: 30.0
+  h_st: 10.0
+  a_min: -7.0
+  a_max: 3.0
+lead_profile:
+  # 先頭車（LEAD）の操作：減速→加速→巡航（例）
+  segments:
+    - [0.0, 30.0, 0.0]
+    - [30.0, 40.0, -1.2]
+    - [40.0, 50.0,  1.2]
+    - [50.0, 999.0, 0.0]
+cav:
+  sigma: 0.6
+  h_go: 60.0
+  kappa: 0.6
+  alpha_head: 0.4
+  beta_head: 0.5
+  beta_cross_head_to_tail: 0.1
+  alpha_tail: 0.4
+  beta_tail: 0.5
+  beta_cross_tail_to_head: 0.8
+hv:
+  tau: 0.8
+  h_go: 60.0
+  kappa: 0.7
+  alpha: 0.1
+  beta: 0.6

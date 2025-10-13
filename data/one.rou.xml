@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <routes>
-  <!-- 外部制御前提（Rail+SpeedMode=0を想定） -->
-  <vType id="ext" length="5" accel="3" decel="7" sigma="0" carFollowModel="Rail"/>
+  <!-- CAV=水色 / HV=グレー -->
+  <vType id="cav" length="5" accel="3" decel="7" sigma="0" carFollowModel="Rail" color="0,160,255"/>
+  <vType id="hv"  length="5" accel="3" decel="7" sigma="0" carFollowModel="Rail" color="170,170,170"/>
 
-  <!-- あなたのネットのエッジIDは A0B0 -->
   <route id="r" edges="A0B0"/>
 
-  <!-- 先頭から x=0, 60, 120, ... 420m に等間隔配置（20 m/sで開始） -->
-  <!-- 並び：Lead → Head → HV×5 → Tail -->
-  <vehicle id="lead" type="ext" route="r" depart="0.0" departPos="0"    departSpeed="20"/>
-  <vehicle id="head" type="ext" route="r" depart="0.0" departPos="60"   departSpeed="20"/>
-  <vehicle id="hv1"  type="ext" route="r" depart="0.0" departPos="120"  departSpeed="20"/>
-  <vehicle id="hv2"  type="ext" route="r" depart="0.0" departPos="180"  departSpeed="20"/>
-  <vehicle id="hv3"  type="ext" route="r" depart="0.0" departPos="240"  departSpeed="20"/>
-  <vehicle id="hv4"  type="ext" route="r" depart="0.0" departPos="300"  departSpeed="20"/>
-  <vehicle id="hv5"  type="ext" route="r" depart="0.0" departPos="360"  departSpeed="20"/>
-  <vehicle id="tail" type="ext" route="r" depart="0.0" departPos="420"  departSpeed="20"/>
-</routes>
+  <!-- 並び: lead(420) → head(360) → HV… → tail(0)  （位置は先頭からの距離[m]） -->
+  <vehicle id="lead" type="hv"  route="r" depart="0.0" departPos="350" departSpeed="25">
+    <param key="role" value="LEAD"/>
+  </vehicle>
 
+  <vehicle id="head" type="cav" route="r" depart="0.0" departPos="300" departSpeed="25">
+    <param key="role" value="CAV_HEAD"/>
+    <param key="pairGroup" value="A"/>
+  </vehicle>
+
+  <vehicle id="hv5"  type="hv"  route="r" depart="0.0" departPos="250" departSpeed="25"/>
+  <vehicle id="hv4"  type="hv"  route="r" depart="0.0" departPos="200" departSpeed="25"/>
+  <vehicle id="hv3"  type="hv"  route="r" depart="0.0" departPos="150" departSpeed="25"/>
+  <vehicle id="hv2"  type="hv"  route="r" depart="0.0" departPos="100" departSpeed="25"/>
+  <vehicle id="hv1"  type="hv"  route="r" depart="0.0" departPos="50"  departSpeed="25"/>
+
+  <vehicle id="tail" type="cav" route="r" depart="0.0" departPos="0"   departSpeed="25">
+    <param key="role" value="CAV_TAIL"/>
+    <param key="pairGroup" value="A"/>
+  </vehicle>
+</routes>
