@@ -9,6 +9,7 @@ OUTPNG  = "/home/hatada/work/simple-cctc/plots/fig_all_vehicles_ms_window_5_50.p
 T_START = 20.0
 T_END   = 90.0
 
+# === 6,7,8 を含む表示順 ===
 ORDER = [
     "v_lead","v_head",
     "v_hv5","v_hv4","v_hv3","v_hv2","v_hv1",
@@ -22,34 +23,34 @@ LABEL = {
     "v_tail":"Tail CAV",
 }
 
-# HV6–8 をまとめて同色（黒と被らない色）
-HV678_COLOR = "0.5"  # 中間グレー（黒より薄いので区別しやすい）
-# もっと色を付けたいなら: "tab:purple" とかでもOK（デフォルトと被りにくい）
-
 def load_csv(path):
-    """ヘッダ名で列を特定して読み込む（速度は m/s のまま）。"""
+    """ヘッダ名で列を特定して読み込む（速度は m/s のまま）"""
     with open(path) as f:
         r = csv.reader(f)
         header = next(r)
-        idx = {name:i for i,name in enumerate(header)}
-        have = [k for k in ORDER if k in idx]
+        idx = {name: i for i, name in enumerate(header)}
 
+        have = [k for k in ORDER if k in idx]
         t = []
         series = {k: [] for k in have}
+
         for row in r:
             t.append(float(row[idx["t"]]))
             for k in have:
                 series[k].append(float(row[idx[k]]))
+
     return t, series
 
 def window(t, series_dict, t0, t1):
     mask = [(ti >= t0) and (ti <= t1) for ti in t]
     tw = [ti for ti, m in zip(t, mask) if m]
-    sw = {k: [xi for xi, m in zip(xs, mask) if m]
-          for k, xs in series_dict.items()}
+    sw = {
+        k: [xi for xi, m in zip(xs, mask) if m]
+        for k, xs in series_dict.items()
+    }
     return tw, sw
 
-# 読み込み → 時間窓切り出し
+# === 読み込み → 時間窓切り出し ===
 tA, sA = load_csv(NO_CONN)
 tA, sA = window(tA, sA, T_START, T_END)
 
@@ -59,48 +60,29 @@ tB, sB = window(tB, sB, T_START, T_END)
 def plot_panel(t, s, title):
     plt.title(title)
 
-    hv15_labeled = False
-    hv678_labeled = False
-
+    hv_labeled = False  # HV を1回だけ凡例に出す
     for k in ORDER:
         if k not in s:
             continue
 
-        # HV6–8（同色でまとめ、凡例は1回だけ）
-        if k in ("v_hv6", "v_hv7", "v_hv8"):
-            label = "HV6–8" if not hv678_labeled else "_nolegend_"
-            hv678_labeled = True
+        if k.startswith("v_hv"):
+            label = "HVs" if not hv_labeled else "_nolegend_"
+            hv_labeled = True
             plt.plot(
                 t, s[k],
-                label=label,
-                color=HV678_COLOR,
-                linewidth=1.2,
-                alpha=0.9
-            )
-
-        # HV1–5（黒でまとめ、凡例は1回だけ）
-        elif k.startswith("v_hv"):
-            label = "HV1–5" if not hv15_labeled else "_nolegend_"
-            hv15_labeled = True
-            plt.plot(
-                t, s[k],
-                label=label,
                 color="black",
                 linewidth=1.0,
-                alpha=0.75
+                alpha=0.8,
+                label=label
             )
-
-        # Lead / CAV
         else:
             plt.plot(
                 t, s[k],
-                label=LABEL.get(k, k),
-                linewidth=1.6
+                linewidth=1.5,
+                label=LABEL.get(k, k)
             )
 
     plt.ylabel("Speed [m/s]")
-
-    # 凡例を右外に退避（プロットに被らない）
     plt.legend(
         loc="center left",
         bbox_to_anchor=(1.02, 0.5),
@@ -108,17 +90,24 @@ def plot_panel(t, s, title):
         frameon=True
     )
 
+# === 描画 ===
 plt.figure(figsize=(10, 8))
 
 plt.subplot(2, 1, 1)
-plot_panel(tA, sA, f"All vehicles — No connection (m/s), {T_START}–{T_END}s")
+plot_panel(
+    tA, sA,
+    f"All vehicles — No connection (m/s), {T_START}–{T_END}s"
+)
 
 plt.subplot(2, 1, 2)
-plot_panel(tB, sB, f"All vehicles — Connected pair (m/s), {T_START}–{T_END}s")
+plot_panel(
+    tB, sB,
+    f"All vehicles — Connected pair (m/s), {T_START}–{T_END}s"
+)
 
 plt.xlabel("Time [s]")
 
-# 右に凡例スペース確保（切れ防止）
+# 右側に凡例用スペースを確保
 plt.tight_layout(rect=[0, 0, 0.82, 1])
 plt.savefig(OUTPNG, dpi=150, bbox_inches="tight")
 print("saved", OUTPNG)

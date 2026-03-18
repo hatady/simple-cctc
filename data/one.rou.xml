@@ -7,23 +7,28 @@
   <route id="r" edges="A0B0"/>
 
   <!-- 並び: lead(420) → head(360) → HV… → tail(0)  （位置は先頭からの距離[m]） -->
-  <vehicle id="lead" type="hv"  route="r" depart="0.0" departPos="350" departSpeed="25">
+  <vehicle id="lead" type="hv"  route="r" depart="0.0" departPos="550" departSpeed="25">
     <param key="role" value="LEAD"/>
   </vehicle>
 
-  <vehicle id="head" type="cav" route="r" depart="0.0" departPos="300" departSpeed="25">
+  <vehicle id="head" type="cav" route="r" depart="0.0" departPos="500" departSpeed="25">
     <param key="role" value="CAV_HEAD"/>
     <param key="pairGroup" value="A"/>
   </vehicle>
 
-  <vehicle id="hv5"  type="hv"  route="r" depart="0.0" departPos="250" departSpeed="25"/>
-  <vehicle id="hv4"  type="hv"  route="r" depart="0.0" departPos="200" departSpeed="25"/>
-  <vehicle id="hv3"  type="hv"  route="r" depart="0.0" departPos="150" departSpeed="25"/>
-  <vehicle id="hv2"  type="hv"  route="r" depart="0.0" departPos="100" departSpeed="25"/>
-  <vehicle id="hv1"  type="hv"  route="r" depart="0.0" departPos="50"  departSpeed="25"/>
+  <vehicle id="hv5"  type="hv"  route="r" depart="0.0" departPos="450" departSpeed="25"/>
+  <vehicle id="hv4"  type="hv"  route="r" depart="0.0" departPos="400" departSpeed="25"/>
+  <vehicle id="hv3"  type="hv"  route="r" depart="0.0" departPos="350" departSpeed="25"/>
+  <vehicle id="hv2"  type="hv"  route="r" depart="0.0" departPos="300" departSpeed="25"/>
+  <vehicle id="hv1"  type="hv"  route="r" depart="0.0" departPos="250"  departSpeed="25"/>
 
-  <vehicle id="tail" type="cav" route="r" depart="0.0" departPos="0"   departSpeed="25">
+  <vehicle id="tail" type="cav" route="r" depart="0.0" departPos="200"   departSpeed="25">
     <param key="role" value="CAV_TAIL"/>
     <param key="pairGroup" value="A"/>
   </vehicle>
+
+  <vehicle id="hv6"  type="hv"  route="r" depart="0.0" departPos="150" departSpeed="25"/>
+  <vehicle id="hv7"  type="hv"  route="r" depart="0.0" departPos="100" departSpeed="25"/>
+  <vehicle id="hv8"  type="hv"  route="r" depart="0.0" departPos="50"  departSpeed="25"/>
+
 </routes>
